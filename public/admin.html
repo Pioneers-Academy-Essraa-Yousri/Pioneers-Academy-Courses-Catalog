@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | Pioneers Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Markazi+Text:wght@700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Login Overlay -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="Icon round-2.png" alt="Pioneers Academy" width="100">
+      </div>
+      <h2>تسجيل الدخول للوحة التحكم</h2>
+      <p>يرجى إدخال اسم المستخدم وكلمة المرور لإدارة الكتالوج</p>
+      <form id="loginForm" class="admin-form">
+        <div class="form-group">
+          <label for="username">اسم المستخدم</label>
+          <input type="text" id="username" required placeholder="أدخل اسم المستخدم">
+        </div>
+        <div class="form-group">
+          <label for="password">كلمة المرور</label>
+          <input type="password" id="password" required placeholder="أدخل كلمة المرور">
+        </div>
+        <button type="submit" class="admin-btn primary-btn">دخول</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard (Hidden until logged in) -->
+  <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+    <header class="admin-header">
+      <div class="admin-brand">
+        <img src="Icon round-2.png" alt="Pioneers Academy" height="60">
+        <div>
+          <h1>لوحة تحكم كتالوج الكورسات</h1>
+          <p>أكاديمية الأوائل - إشراف أ. إسراء يسري</p>
+        </div>
+      </div>
+      <button id="logoutBtn" class="admin-btn danger-btn">تسجيل الخروج</button>
+    </header>
+
+    <div class="admin-container">
+      <!-- Sidebar Navigation Tabs -->
+      <aside class="admin-sidebar">
+        <nav class="admin-nav">
+          <button class="nav-tab active" data-tab="tab-home">🏠 الرئيسية</button>
+          <button class="nav-tab" data-tab="tab-categories">📁 إدارة الأقسام (sections)</button>
+          <button class="nav-tab" data-tab="tab-courses">📚 إدارة الكورسات</button>
+          <button class="nav-tab" data-tab="tab-teachers">👨‍🏫 إدارة المدرسين</button>
+          <button class="nav-tab" data-tab="tab-users" id="nav-users-tab" style="display: none;">👤 إدارة المستخدمين</button>
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="admin-content">
+        
+        <!-- HOME / STATISTICS TAB -->
+        <section id="tab-home" class="tab-content active">
+          <h2>مرحباً بك في لوحة التحكم</h2>
+          <p>يمكنك من هنا إضافة وتعديل وحذف الأقسام والكورسات وبيانات المعلمين بكل سهولة.</p>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📁</div>
+              <div class="stat-info">
+                <span class="stat-number" id="stat-categories-count">0</span>
+                <span class="stat-label">الأقسام الحالية</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📚</div>
+              <div class="stat-info">
+                <span class="stat-number" id="stat-courses-count">0</span>
+                <span class="stat-label">الكورسات المتاحة</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">👨‍🏫</div>
+              <div class="stat-info">
+                <span class="stat-number" id="stat-teachers-count">0</span>
+                <span class="stat-label">المدرسين المسجلين</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-guidelines card">
+            <h3>💡 إرشادات سريعة للتحكم بالكتالوج</h3>
+            <ul>
+              <li><strong>الأقسام:</strong> تمثل التبويبات العلوية في صفحة الطلاب (تأسيس، English، إلخ). يمكنك إضافة أقسام جديدة أو حذفها.</li>
+              <li><strong>الكورسات:</strong> يمكنك إضافة كورس وتحديد القسم التابع له وكتابة محتوى الكورس ونقاط المنهج.</li>
+              <li><strong>المدرسين:</strong> يمكنك إضافة أكثر من مدرس لنفس الكورس، وتحديد تقييماتهم (الخبرة والنطق) ورفع صورتهم ووضع رابط فيديو تعريفي.</li>
+              <li><strong>رفع الصور:</strong> استخدم زر رفع صورة المدرس لرفعها مباشرة من جهازك بدلاً من استخدام نصوص base64 الطويلة لتحسين سرعة تحميل الصفحة.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- CATEGORIES (SECTIONS) TAB -->
+        <section id="tab-categories" class="tab-content">
+          <div class="section-header">
+            <h2>إدارة الأقسام (Sections)</h2>
+            <button class="admin-btn primary-btn" id="openAddCategoryBtn">➕ إضافة قسم جديد</button>
+          </div>
+
+          <!-- Add/Edit Category Modal / Box -->
+          <div id="categoryFormContainer" class="form-container card" style="display: none;">
+            <h3 id="categoryFormTitle">إضافة قسم جديد</h3>
+            <form id="categoryForm" class="admin-form">
+              <input type="hidden" id="categoryId">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="categoryNameAr">اسم القسم بالعربية (يظهر للطلاب)</label>
+                  <input type="text" id="categoryNameAr" required placeholder="مثال: لغات أخرى">
+                </div>
+                <div class="form-group">
+                  <label for="categoryNameEn">اسم القسم بالإنجليزية (يستخدم كمعرف)</label>
+                  <input type="text" id="categoryNameEn" required placeholder="مثال: languages">
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="admin-btn success-btn">حفظ</button>
+                <button type="button" class="admin-btn secondary-btn" id="cancelCategoryBtn">إلغاء</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Categories List -->
+          <div class="table-container card">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>اسم القسم بالعربية</th>
+                  <th>الاسم بالإنجليزية</th>
+                  <th>التحكم</th>
+                </tr>
+              </thead>
+              <tbody id="categoriesTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- COURSES TAB -->
+        <section id="tab-courses" class="tab-content">
+          <div class="section-header">
+            <h2>إدارة الكورسات</h2>
+            <button class="admin-btn primary-btn" id="openAddCourseBtn">➕ إضافة كورس جديد</button>
+          </div>
+
+          <!-- Add/Edit Course Form -->
+          <div id="courseFormContainer" class="form-container card" style="display: none;">
+            <h3 id="courseFormTitle">إضافة كورس جديد</h3>
+            <form id="courseForm" class="admin-form">
+              <input type="hidden" id="courseId">
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="courseTitleAr">عنوان الكورس بالعربية</label>
+                  <input type="text" id="courseTitleAr" required placeholder="مثال: تأسيس أوكسفورد فونيكس">
+                </div>
+                <div class="form-group">
+                  <label for="courseTitleEn">عنوان الكورس بالإنجليزية</label>
+                  <input type="text" id="courseTitleEn" required placeholder="مثال: Oxford Phonics Foundation">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="courseCategory">القسم التابع له الكورس</label>
+                  <select id="courseCategory" required>
+                    <!-- Loaded dynamically -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="courseTag">الوسم العلوي (Tag)</label>
+                  <input type="text" id="courseTag" required placeholder="مثال: FOUNDATION · BEGINNERS">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="courseDescription">وصف قصير للكورس</label>
+                <textarea id="courseDescription" required rows="3" placeholder="اكتب وصفاً موجزاً يوضح فكرة وأهمية الكورس..."></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group checkbox-group">
+                  <label for="courseComingSoon">
+                    <input type="checkbox" id="courseComingSoon">
+                    كورس "قريباً" (سيتم قفله بعلامة القفل 🔒 ومنع اختياره)
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label for="courseVideoUrl">رابط فيديو تعريفي للكورس (إن وجد)</label>
+                  <input type="url" id="courseVideoUrl" placeholder="رابط Google Drive أو YouTube للمشاهدة المباشرة">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>محتوى الكورس (نقاط المنهج)</label>
+                <div id="syllabusContainer" class="syllabus-points">
+                  <!-- syllabus inputs added here -->
+                </div>
+                <button type="button" class="admin-btn secondary-btn" style="margin-top: 8px;" id="addSyllabusPointBtn">➕ إضافة نقطة منهج</button>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="admin-btn success-btn">حفظ الكورس</button>
+                <button type="button" class="admin-btn secondary-btn" id="cancelCourseBtn">إلغاء</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Courses List -->
+          <div class="admin-grid" id="coursesGrid">
+            <!-- Loaded dynamically -->
+          </div>
+        </section>
+
+        <!-- TEACHERS TAB -->
+        <section id="tab-teachers" class="tab-content">
+          <div class="section-header">
+            <h2>إدارة المدرسين</h2>
+            <button class="admin-btn primary-btn" id="openAddTeacherBtn">➕ إضافة مدرس لكورس</button>
+          </div>
+
+          <!-- Add/Edit Teacher Form -->
+          <div id="teacherFormContainer" class="form-container card" style="display: none;">
+            <h3 id="teacherFormTitle">إضافة مدرس جديد</h3>
+            <form id="teacherForm" class="admin-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="teacherCourseSelect">اختر الكورس التابع له المدرس</label>
+                  <select id="teacherCourseSelect" required>
+                    <!-- Loaded dynamically -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="teacherName">اسم المدرس</label>
+                  <input type="text" id="teacherName" required placeholder="مثال: Mr. Muhammad Abdulatif">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="teacherStage">المرحلة / التخصص</label>
+                  <input type="text" id="teacherStage" placeholder="مثال: رئيس قسم · ثانوي">
+                </div>
+                <div class="form-group">
+                  <label for="teacherCurriculum">المنهج (Curriculum)</label>
+                  <input type="text" id="teacherCurriculum" placeholder="مثال: Close Up · Upstream">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="teacherPriceLabel">تفاصيل السعر والجروبات</label>
+                  <input type="text" id="teacherPriceLabel" placeholder="مثال: جروب 650 ج · فردي 1200 ج / شهريًا">
+                </div>
+                <div class="form-group">
+                  <label for="teacherQuality">صفات مميزة للمدرس</label>
+                  <input type="text" id="teacherQuality" placeholder="مثال: Academic أو Kind · Fun">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="teacherAcademicRating">تقييم الخبرة والأكاديمية (خبرة 📚)</label>
+                  <select id="teacherAcademicRating" required>
+                    <option value="5">5 نجوم (★★★★★)</option>
+                    <option value="4">4 نجوم (★★★★☆)</option>
+                    <option value="3">3 نجوم (★★★☆☆)</option>
+                    <option value="2">2 نجوم (★★☆☆☆)</option>
+                    <option value="1">نجمة واحدة (★☆☆☆☆)</option>
+                    <option value="ممتاز">ممتاز (نصي)</option>
+                    <option value="جيد جداً">جيد جداً (نصي)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="teacherPronunciationRating">تقييم النطق واللكنة (نطق 🗣️ - اختياري)</label>
+                  <select id="teacherPronunciationRating">
+                    <option value="">لا يوجد تقييم نطق</option>
+                    <option value="5">5 نجوم (★★★★★)</option>
+                    <option value="4">4 نجوم (★★★★☆)</option>
+                    <option value="3">3 نجوم (★★★☆☆)</option>
+                    <option value="2">2 نجوم (★★☆☆☆)</option>
+                    <option value="1">نجمة واحدة (★☆☆☆☆)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="teacherVideoUrl">رابط فيديو تعريفي للمدرس (إن وجد)</label>
+                  <input type="url" id="teacherVideoUrl" placeholder="رابط Google Drive أو YouTube للمشاهدة المباشرة">
+                </div>
+                <div class="form-group">
+                  <label for="teacherPhotoUpload">صورة المدرس الشخصية</label>
+                  <div class="upload-wrapper">
+                    <input type="file" id="teacherPhotoUpload" accept="image/*" style="display: none;">
+                    <button type="button" class="admin-btn secondary-btn" id="triggerUploadBtn">📁 اختر ملف صورة</button>
+                    <input type="text" id="teacherPhotoUrl" placeholder="رابط الصورة أو سيتم تحديثه عند رفع الملف" style="margin-top: 8px;">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" id="imagePreviewContainer" style="display: none;">
+                <label>معاينة الصورة</label>
+                <img id="imagePreview" src="" alt="معاينة الصورة الشخصية للمدرس" style="max-width: 120px; border-radius: 50%; border: 2px solid var(--paper-line);">
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="admin-btn success-btn">حفظ بيانات المدرس</button>
+                <button type="button" class="admin-btn secondary-btn" id="cancelTeacherBtn">إلغاء</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Teachers List (Grouped by Course) -->
+          <div class="teachers-section" id="teachersGroupedContainer">
+            <!-- Loaded dynamically -->
+          </div>
+        </section>
+
+        <!-- USER MANAGEMENT TAB -->
+        <section id="tab-users" class="tab-content">
+          <div class="section-header">
+            <h2>إدارة حسابات المستخدمين (الأدمن)</h2>
+            <button class="admin-btn primary-btn" id="openAddUserBtn">➕ إضافة مستخدم جديد</button>
+          </div>
+
+          <!-- Add/Edit User Form -->
+          <div id="userFormContainer" class="form-container card" style="display: none;">
+            <h3 id="userFormTitle">إضافة مستخدم جديد</h3>
+            <form id="userForm" class="admin-form">
+              <input type="hidden" id="userId">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="userUsername">اسم المستخدم</label>
+                  <input type="text" id="userUsername" required placeholder="مثال: ahmad_editor">
+                </div>
+                <div class="form-group">
+                  <label for="userPassword">كلمة المرور</label>
+                  <input type="password" id="userPassword" placeholder="أدخل كلمة المرور (اتركها فارغة للتعديل دون تغيير)">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="userRole">الصلاحية (Permissions)</label>
+                  <select id="userRole" required>
+                    <option value="admin">مدير كامل (Full admin - CRUD all & users)</option>
+                    <option value="editor">محرر (Editor - Add/Edit all, no delete/users)</option>
+                    <option value="viewer">مشاهد فقط (Viewer - Read-only view)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="admin-btn success-btn">حفظ الحساب</button>
+                <button type="button" class="admin-btn secondary-btn" id="cancelUserBtn">إلغاء</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Users List -->
+          <div class="table-container card">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>اسم المستخدم</th>
+                  <th>كلمة المرور</th>
+                  <th>الصلاحية</th>
+                  <th>التحكم</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>

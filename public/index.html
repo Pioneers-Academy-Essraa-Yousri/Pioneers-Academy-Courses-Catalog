@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كتالوج الكورسات | Pioneers Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@500;600;700&family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <button class="theme-toggle" id="themeToggle">🌓 الوضع الداكن</button>
+
+  <header class="hero">
+    <img src="Icon round-2.png" alt="Pioneers Academy" class="logo" width="150">
+    <h1> Pioneers Academy - Essraa Yousri</h1>
+    <h1 class="subtitle" style="color:var(--stamp-red);">كتالوج كورسات أكاديمية الأوائل</h1>
+    <h2 class="subtitle">لأطفالك من 4 لـ 16 سنة</h2>
+    <hr>
+    <p>اطّلع على الكورسات المتاحة، تقييم المدرس، ومحتوى كل كورس بالتفصيل واختار اللي يناسب طفلك.</p>
+  </header>
+
+  <div class="search-wrapper">
+    <input type="text" id="searchInput" class="search-input" placeholder="ابحث باسم الكورس، المادة، أو اسم المدرس...">
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-filter="all">الكل</button>
+  </nav>
+
+  <main class="shelf">
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <div class="bottom-bar" id="bottomBar">
+    <div class="info">تم اختيار <b id="countLabel">0</b> كورس(ات): <span id="namesLabel"></span></div>
+    <div class="actions">
+      <button class="clear" id="clearBtn">إلغاء الكل</button>
+      <a class="confirm" id="confirmBtn" href="#" target="_blank" rel="noopener">تواصل للتسجيل</a>
+    </div>
+  </div>
+
+  <script>
+    let COURSES = [];
+    let CATEGORIES = [];
+    const WHATSAPP_NUMBER = '201554494763';
+
+    const grid = document.getElementById('grid');
+    const selected = new Set();
+    const selectedTeachers = new Map();
+
+    // Fetch catalog data on load
+    async function loadCatalog() {
+      try {
+        const response = await fetch('/api/catalog');
+        const data = await response.json();
+        CATEGORIES = data.categories || [];
+        COURSES = data.courses || [];
+        
+        renderTabs();
+        renderGrid();
+      } catch (err) {
+        console.error('Error fetching catalog:', err);
+      }
+    }
+
+    function renderTabs() {
+      const tabsContainer = document.getElementById('tabs');
+      tabsContainer.innerHTML = '<button class="tab active" data-filter="all">الكل</button>';
+      
+      CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'tab';
+        btn.dataset.filter = cat.id;
+        btn.textContent = cat.nameAr;
+        tabsContainer.appendChild(btn);
+      });
+
+      // Bind click events to the dynamically rendered tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          filterCourses();
+        });
+      });
+    }
+
+    function renderGrid() {
+      grid.innerHTML = '';
+      COURSES.forEach(c => grid.appendChild(renderCard(c)));
+    }
+
+    function wrapIfLatin(text) {
+      return /[A-Za-z]/.test(String(text)) ? `<span class="ltr-label">${text}</span>` : text;
+    }
+
+    function renderRating(val) {
+      if (typeof val === 'number') {
+        return `<span class="rating-badge">${'★'.repeat(val)}${'☆'.repeat(5 - val)}</span>`;
+      } else if (val) {
+        return `<span class="rating-badge text-rating">${wrapIfLatin(val)}</span>`;
+      }
+      return '';
+    }
+
+    function renderCard(c) {
+      const div = document.createElement('div');
+      div.className = 'card' + (c.comingSoon ? ' soon' : '');
+      div.dataset.category = c.category;
+      div.dataset.id = c.id;
+
+      // Select first teacher by default if available
+      if (!c.comingSoon && c.teachers && c.teachers.length) {
+        selectedTeachers.set(c.id, c.teachers[0].name);
+      }
+
+      let teachersBlock = '';
+      if (!c.comingSoon) {
+        if (c.teachers && c.teachers.length) {
+          teachersBlock = `
+        <details class="content-acc" open>
+          <summary>👨‍🏫 المدرسين المتاحين (${c.teachers.length})</summary>
+          <div class="teacher-list">
+            ${c.teachers.map((t, idx) => {
+              let teacherVideoBlock = '';
+              let fixedTUrl = t.videoUrl ? t.videoUrl.replace('/view', '/preview').replace('?usp=sharing', '') : '';
+              teacherVideoBlock = fixedTUrl
+                ? `<div class="video-box" style="margin-top: 12px; margin-bottom: 0;"><div class="video-inner" style="min-height: 150px; padding: 5px;"><iframe style="width:100%;height:150px; border-radius:4px" src="${fixedTUrl}" allow="autoplay" allowfullscreen></iframe></div></div>`
+                : `<div class="video-box" style="margin-top: 12px; margin-bottom: 0;"><div class="video-inner" style="min-height: 60px;"><div class="play" style="font-size: 16px;">🎬</div><small>فيديو للمدرس — قريبًا</small></div></div>`;
+              return `
+              <div class="teacher-mini ${idx === 0 ? 'selected-teacher' : ''}" data-teacher-name="${t.name}">
+                <div class="teacher-select-indicator"></div>
+                <div class="tm-top">
+                  <div class="tm-id">
+                    ${t.photo ? `<img class="tm-avatar" src="${t.photo}" alt="">` : ''}
+                    <span class="tm-name ltr-label">${t.name}</span>
+                  </div>
+                  ${t.stage ? `<span class="tm-stage">${t.stage}</span>` : ''}
+                </div>
+                ${t.curriculum ? `<div class="tm-curriculum ltr-label">${t.curriculum}</div>` : ''}
+                <div class="tm-ratings">📚 خبرة ${renderRating(t.academic)}${t.pronunciation ? ` &nbsp;·&nbsp; 🗣️ نطق ${renderRating(t.pronunciation)}` : ''}</div>
+                ${t.quality ? `<div class="tm-quality ltr-label">${t.quality}</div>` : ''}
+                <div class="tm-price">${t.priceLabel}</div>
+                ${teacherVideoBlock}
+              </div>`;
+            }).join('')}
+          </div>
+        </details>`;
+        } else {
+          teachersBlock = `<p class="no-teacher-note">📋 بيانات المدرسين هتضاف قريبًا.</p>`;
+        }
+      }
+
+      let accordion = '';
+      if (!c.comingSoon && c.syllabus && c.syllabus.length) {
+        accordion = `
+      <details class="content-acc">
+        <summary>محتوى الكورس</summary>
+        <ul>${c.syllabus.map(s => `<li>${s}</li>`).join('')}</ul>
+      </details>`;
+      }
+
+      div.innerHTML = `
+    <div class="corner"></div>
+    <span class="tag ltr-label">${c.tag}</span>
+    <h3>${c.titleAr}</h3>
+    <p class="title-en ltr-label">${c.titleEn}</p>
+    <p class="desc">${c.description}</p>
+    ${teachersBlock}
+    ${accordion}
+    <button class="select-btn" ${c.comingSoon ? 'disabled' : ''}>${c.comingSoon ? 'قريبًا' : 'اختار الكورس'}</button>
+  `;
+
+      if (!c.comingSoon) {
+        const btn = div.querySelector('.select-btn');
+        btn.addEventListener('click', () => toggleSelect(c, div, btn));
+
+        // Add click events to individual teacher selectors
+        if (c.teachers && c.teachers.length) {
+          div.querySelectorAll('.teacher-mini').forEach(item => {
+            item.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const tName = item.dataset.teacherName;
+              selectedTeachers.set(c.id, tName);
+
+              // Update selection classes
+              div.querySelectorAll('.teacher-mini').forEach(el => el.classList.remove('selected-teacher'));
+              item.classList.add('selected-teacher');
+
+              if (selected.has(c.id)) {
+                updateBottomBar();
+              }
+            });
+          });
+        }
+      }
+      return div;
+    }
+
+    function toggleSelect(c, cardEl, btn) {
+      if (selected.has(c.id)) {
+        selected.delete(c.id);
+        btn.classList.remove('selected');
+        btn.textContent = 'اختار الكورس';
+        const stamp = cardEl.querySelector('.selected-stamp');
+        if (stamp) stamp.remove();
+      } else {
+        selected.add(c.id);
+        btn.classList.add('selected');
+        btn.textContent = 'تم الاختيار';
+        const stamp = document.createElement('div');
+        stamp.className = 'selected-stamp';
+        stamp.textContent = '✓ مُختار';
+        cardEl.appendChild(stamp);
+      }
+      updateBottomBar();
+    }
+
+    function updateBottomBar() {
+      const bar = document.getElementById('bottomBar');
+      const detailsList = [];
+
+      selected.forEach(id => {
+        const c = COURSES.find(x => x.id === id);
+        if (c) {
+          const tName = selectedTeachers.get(id);
+          if (tName) {
+            detailsList.push(`${c.titleAr} (مع ${tName})`);
+          } else {
+            detailsList.push(c.titleAr);
+          }
+        }
+      });
+
+      document.getElementById('countLabel').textContent = selected.size;
+      document.getElementById('namesLabel').textContent = detailsList.join('، ');
+
+      const confirmBtn = document.getElementById('confirmBtn');
+      const msg = encodeURIComponent('عايز/ة أسجل في الكورسات التالية: ' + detailsList.join('، '));
+      confirmBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+      bar.classList.toggle('show', selected.size > 0);
+    }
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      selected.clear();
+      document.querySelectorAll('.select-btn.selected').forEach(b => {
+        b.classList.remove('selected'); b.textContent = 'اختار الكورس';
+      });
+      document.querySelectorAll('.selected-stamp').forEach(s => s.remove());
+      updateBottomBar();
+    });
+
+    // Theme Toggle Logic
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeToggle.textContent = savedTheme === 'dark' ? '☀️ الوضع المضيء' : '🌓 الوضع الداكن';
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.textContent = newTheme === 'dark' ? '☀️ الوضع المضيء' : '🌓 الوضع الداكن';
+    });
+
+    // Search and Tab Filtering function combined
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', filterCourses);
+
+    function filterCourses() {
+      const query = searchInput.value.toLowerCase().trim();
+      const activeTab = document.querySelector('.tab.active');
+      const categoryFilter = activeTab ? activeTab.dataset.filter : 'all';
+
+      document.querySelectorAll('.card').forEach(card => {
+        const id = card.dataset.id;
+        const c = COURSES.find(x => x.id === id);
+        if (!c) return;
+
+        const matchesCategory = (categoryFilter === 'all' || c.category === categoryFilter);
+        const matchesSearch = !query ||
+          c.titleAr.toLowerCase().includes(query) ||
+          c.titleEn.toLowerCase().includes(query) ||
+          c.description.toLowerCase().includes(query) ||
+          c.tag.toLowerCase().includes(query) ||
+          (c.teachers && c.teachers.some(t => t.name.toLowerCase().includes(query) || (t.quality && t.quality.toLowerCase().includes(query))));
+
+        card.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
+      });
+    }
+
+    // Load catalog data
+    loadCatalog();
+  </script>
+</body>
+
+</html>

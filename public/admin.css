@@ -1,0 +1,704 @@
+/* ============================================================
+   ADMIN CSS — Pioneers Academy Catalog Control Panel
+   ============================================================ */
+
+/* Toast System */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: var(--ink);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  display: none;
+  font-weight: 600;
+  font-size: 14px;
+  border-right: 4px solid var(--gold);
+}
+
+.toast.show {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Login Overlay */
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--paper);
+  background-image: radial-gradient(circle at 1px 1px, var(--paper-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.login-card {
+  background: var(--card);
+  border: 1px solid var(--paper-line);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px var(--shadow);
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+}
+
+.login-logo {
+  margin-bottom: 24px;
+}
+
+.login-card h2 {
+  font-family: 'Cairo', sans-serif;
+  color: var(--ink);
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.login-card p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+/* Dashboard Layout */
+.admin-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--paper-line);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-brand h1 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.admin-brand p {
+  font-size: 11px;
+  margin: 2px 0 0;
+  color: var(--ink-soft);
+}
+
+.admin-container {
+  display: flex;
+  flex: 1;
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  gap: 24px;
+}
+
+/* Sidebar Tabbed Navigation */
+.admin-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: sticky;
+  top: 24px;
+}
+
+.nav-tab {
+  width: 100%;
+  text-align: right;
+  padding: 14px 18px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--tab-inactive);
+  color: var(--ink-soft);
+  border: 1px solid var(--paper-line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-tab:hover {
+  transform: translateX(-4px);
+  border-color: var(--teal);
+  color: var(--ink);
+}
+
+.nav-tab.active {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal-dark);
+}
+
+/* Content Area */
+.admin-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-content h2 {
+  font-size: 22px;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.tab-content p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 24px;
+}
+
+/* Statistics Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--paper-line);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-icon {
+  font-size: 32px;
+  background: rgba(47, 99, 88, 0.08);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* Dashboard Guidelines Box */
+.dashboard-guidelines {
+  padding: 24px;
+  background: var(--card);
+}
+
+.dashboard-guidelines h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+  color: var(--teal-dark);
+}
+
+.dashboard-guidelines ul {
+  padding-right: 20px;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.dashboard-guidelines li {
+  margin-bottom: 8px;
+}
+
+/* Action Buttons */
+.admin-btn {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.admin-btn:hover {
+  transform: translateY(-1px);
+}
+
+.admin-btn:active {
+  transform: translateY(0);
+}
+
+.primary-btn {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal-dark);
+}
+
+.primary-btn:hover {
+  background: var(--teal-dark);
+}
+
+.secondary-btn {
+  background: var(--card);
+  color: var(--ink-soft);
+  border-color: var(--paper-line);
+}
+
+.secondary-btn:hover {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+}
+
+.success-btn {
+  background: #27ae60;
+  color: #fff;
+}
+
+.success-btn:hover {
+  background: #219653;
+}
+
+.danger-btn {
+  background: var(--stamp-red);
+  color: #fff;
+}
+
+.danger-btn:hover {
+  background: #872e2e;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+/* Form Container and Design */
+.form-container {
+  margin-bottom: 24px;
+  padding: 24px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-container h3 {
+  font-size: 16px;
+  margin: 0 0 18px;
+  color: var(--teal-dark);
+  border-bottom: 1px solid var(--paper-line);
+  padding-bottom: 8px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="url"],
+.form-group select,
+.form-group textarea {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1.5px solid var(--paper-line);
+  background: var(--card);
+  color: var(--ink);
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px rgba(47, 99, 88, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  margin-top: 26px; /* align with input fields in row */
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--teal);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  border-top: 1px solid var(--paper-line);
+  padding-top: 16px;
+}
+
+/* Syllabus Points Dynamism */
+.syllabus-points {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.syllabus-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.syllabus-row input {
+  flex: 1;
+}
+
+/* Table Design */
+.table-container {
+  padding: 0;
+  overflow: hidden;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  font-size: 13px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.admin-table th {
+  background: rgba(47, 99, 88, 0.05);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(247, 242, 231, 0.4);
+}
+
+/* Admin Grid Cards (for Courses) */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.course-admin-card {
+  background: var(--card);
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 4px 12px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.course-admin-card .corner {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 20px 20px;
+  border-color: transparent transparent var(--paper-line) transparent;
+  border-radius: 0 0 0 var(--radius);
+}
+
+.course-admin-card h3 {
+  font-size: 18px;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+
+.course-admin-card .category-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--teal-dark);
+  background: rgba(47, 99, 88, .08);
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+
+.course-admin-card .tag-badge {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.course-admin-card .course-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  border-top: 1px dashed var(--paper-line);
+  padding-top: 12px;
+  margin-top: auto;
+}
+
+/* Teachers List UI (Grouped by Course) */
+.course-teachers-group {
+  margin-bottom: 24px;
+  background: var(--card);
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.course-teachers-group h3 {
+  font-size: 16px;
+  margin: 0 0 16px;
+  border-bottom: 2px solid var(--teal);
+  padding-bottom: 6px;
+  color: var(--ink);
+}
+
+.teachers-subgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+.teacher-admin-card {
+  border: 1px solid var(--paper-line);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(247, 242, 231, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.teacher-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.teacher-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--paper-line);
+}
+
+.teacher-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.teacher-title .name {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.teacher-title .stage {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.teacher-details-list {
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.teacher-details-list span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Image Upload Preview and Input styling */
+.upload-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+#triggerUploadBtn {
+  align-self: flex-start;
+}
+
+#imagePreviewContainer {
+  margin-top: 10px;
+  background: rgba(247, 242, 231, 0.4);
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+    padding: 16px;
+  }
+  .admin-sidebar {
+    width: 100%;
+  }
+  .admin-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .nav-tab {
+    white-space: nowrap;
+    width: auto;
+  }
+  .nav-tab:hover {
+    transform: none;
+  }
+  .form-row .form-group {
+    flex: 1 1 100%;
+  }
+  .checkbox-group label {
+    margin-top: 10px;
+  }
+}
+
+/* View-Only and Editor Constraints */
+body.view-only-mode .admin-btn.danger-btn,
+body.view-only-mode .admin-btn.primary-btn,
+body.view-only-mode .admin-btn.success-btn,
+body.view-only-mode .edit-course-btn,
+body.view-only-mode .edit-cat-btn,
+body.view-only-mode .edit-teacher-btn,
+body.view-only-mode #openAddCategoryBtn,
+body.view-only-mode #openAddCourseBtn,
+body.view-only-mode #openAddTeacherBtn,
+body.view-only-mode #openAddUserBtn,
+body.view-only-mode #addSyllabusPointBtn,
+body.view-only-mode #triggerUploadBtn,
+body.view-only-mode .remove-syllabus-btn {
+  display: none !important;
+}
+
+body.editor-mode .admin-btn.danger-btn,
+body.editor-mode .delete-course-btn,
+body.editor-mode .delete-cat-btn,
+body.editor-mode .delete-teacher-btn {
+  display: none !important;
+}

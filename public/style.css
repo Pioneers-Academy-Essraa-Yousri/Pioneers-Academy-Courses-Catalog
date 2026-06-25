@@ -1,0 +1,717 @@
+/* ============================================================
+   EDIT ZONE #1 — التوكنز (الألوان والخطوط)
+   ============================================================ */
+:root {
+  --paper: #F6F1E4;
+  --paper-line: #E4DABF;
+  --tab-inactive: #ECE3CC;
+  --ink: #21344B;
+  --ink-soft: #4A5A70;
+  --teal: #2F6358;
+  --teal-dark: #213F38;
+  --gold: #C99A3B;
+  --stamp-red: #A23B3B;
+  --card: #FFFCF5;
+  --shadow: rgba(33, 52, 75, 0.16);
+  --radius: 14px;
+  --transition-speed: 0.25s;
+  --teacher-bg: rgba(247, 242, 231, 0.5);
+  --teacher-bg-hover: rgba(247, 242, 231, 0.8);
+}
+
+html[data-theme="dark"] {
+  --paper: #1B2430;
+  --paper-line: #2C3E50;
+  --tab-inactive: #252B35;
+  --ink: #EAF2F8;
+  --ink-soft: #85929E;
+  --teal: #3498DB;
+  --teal-dark: #5DADE2;
+  --gold: #F1C40F;
+  --stamp-red: #EC7063;
+  --card: #212F3D;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --teacher-bg: rgba(0, 0, 0, 0.25);
+  --teacher-bg-hover: rgba(255, 255, 255, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Cairo', sans-serif;
+  background-image:
+    radial-gradient(circle at 1px 1px, var(--paper-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--paper-line);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background: var(--card);
+  border: 1.5px solid var(--paper-line);
+  color: var(--ink);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px var(--shadow);
+  z-index: 100;
+  user-select: none;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--teal);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+/* Search Bar */
+.search-wrapper {
+  max-width: 450px;
+  margin: 18px auto 24px;
+  padding: 0 24px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 46px 12px 18px;
+  border-radius: 24px;
+  border: 1.5px solid var(--paper-line);
+  background: var(--card);
+  color: var(--ink);
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.search-icon {
+  position: absolute;
+  right: 38px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-soft);
+  pointer-events: none;
+  font-size: 16px;
+}
+
+.ltr-label {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ---------- Hero / غلاف الكتالوج ---------- */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 28px;
+  text-align: center;
+  position: relative;
+}
+
+.seal {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  border: 3px double var(--teal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--teal);
+  transform: rotate(-6deg);
+  background: var(--card);
+  box-shadow: 0 4px 10px var(--shadow);
+}
+
+.seal strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.seal span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+}
+
+.hero h1 {
+  font-family: 'Markazi Text', serif;
+  font-weight: 700;
+  font-size: clamp(30px, 5vw, 46px);
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.hero p {
+  font-size: 16px;
+  color: var(--ink-soft);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ---------- Tabs (تبويبات الملف) ---------- */
+.tabs {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 6px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.tab {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--tab-inactive);
+  color: var(--ink-soft);
+  border: 1px solid var(--paper-line);
+  border-bottom: none;
+  padding: 10px 18px;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s, transform .15s;
+}
+
+.tab:hover {
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  background: var(--card);
+  color: var(--teal-dark);
+  position: relative;
+  top: 1px;
+}
+
+.tab:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ---------- Grid ---------- */
+.shelf {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 24px 140px;
+  border-top: 1px solid var(--paper-line);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 22px;
+  padding-top: 22px;
+}
+
+/* ---------- بطاقة الفهرسة (index card) ---------- */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 16px var(--shadow);
+  position: relative;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--paper-line);
+  transition: transform .18s, box-shadow .18s;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px var(--shadow);
+}
+
+.card::before,
+.card::after {
+  /* ثقوب الفهرسة */
+  content: '';
+  position: absolute;
+  top: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .25);
+}
+
+.card::before {
+  right: 18px;
+}
+
+.card::after {
+  right: 34px;
+}
+
+.card .corner {
+  /* طية الزاوية */
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 20px 20px;
+  border-color: transparent transparent var(--paper-line) transparent;
+  border-radius: 0 0 0 var(--radius);
+}
+
+.card .tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--teal-dark);
+  background: rgba(47, 99, 88, .08);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  letter-spacing: .5px;
+}
+
+.card h3 {
+  font-family: 'Markazi Text', serif;
+  font-size: 24px;
+  margin: 0 0 2px;
+  color: var(--ink);
+}
+
+.card .title-en {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 0 0 10px;
+}
+
+.card p.desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  flex-grow: 0;
+}
+
+/* قائمة المدرسين المتاحين لكل كورس */
+.teacher-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.teacher-mini {
+  border: 1px solid var(--paper-line);
+  border-radius: 10px;
+  padding: 10px 12px 10px 40px;
+  /* Space for selector indicator on the left */
+  background: var(--teacher-bg);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.teacher-mini:hover {
+  background: var(--teacher-bg-hover);
+  border-color: var(--teal);
+}
+
+.teacher-mini.selected-teacher {
+  border-color: var(--teal);
+  background: rgba(47, 99, 88, 0.08);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.teacher-select-indicator {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--paper-line);
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teacher-mini.selected-teacher .teacher-select-indicator {
+  border-color: var(--teal);
+  background: var(--teal);
+}
+
+.teacher-select-indicator::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  display: none;
+}
+
+.teacher-mini.selected-teacher .teacher-select-indicator::after {
+  display: block;
+}
+
+.rating-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(201, 154, 59, 0.15);
+  color: var(--gold);
+  border: 1px solid var(--paper-line);
+}
+
+.rating-badge.text-rating {
+  background: rgba(47, 99, 88, 0.1);
+  color: var(--teal-dark);
+  border-color: rgba(47, 99, 88, 0.2);
+}
+
+.tm-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tm-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tm-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid var(--paper-line);
+}
+
+.tm-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.tm-stage {
+  font-size: 10px;
+  background: rgba(47, 99, 88, .1);
+  color: var(--teal-dark);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.tm-curriculum {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.tm-ratings {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.tm-quality {
+  font-size: 11px;
+  color: var(--teal-dark);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.tm-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--stamp-red);
+  margin-top: 6px;
+}
+
+.no-teacher-note {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+/* أكورديون محتوى الكورس */
+details.content-acc {
+  border-top: 1px dashed var(--paper-line);
+  padding-top: 10px;
+  margin-bottom: 12px;
+}
+
+details.content-acc summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--teal-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+details.content-acc summary::-webkit-details-marker {
+  display: none;
+}
+
+details.content-acc summary::after {
+  content: '⌄';
+  font-size: 16px;
+  transition: transform .2s;
+}
+
+details.content-acc[open] summary::after {
+  transform: rotate(180deg);
+}
+
+details.content-acc ul {
+  margin: 10px 0 0;
+  padding-right: 18px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.9;
+}
+
+/* صندوق الفيديو */
+.video-box {
+  background: repeating-linear-gradient(90deg, var(--teal-dark) 0 10px, var(--ink) 10px 20px);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 16px;
+}
+
+.teacher-mini .video-box {
+  margin-left: -28px;
+}
+
+.video-inner {
+  background: #0F1B22;
+  border-radius: 6px;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #D9CFB0;
+  gap: 4px;
+  padding: 10px;
+}
+
+.video-inner .play {
+  font-size: 22px;
+}
+
+.video-inner small {
+  font-size: 11px;
+  opacity: .75;
+  text-align: center;
+}
+
+.select-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 11px 0;
+  border-radius: 8px;
+  border: none;
+  background: var(--teal);
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .15s, transform .12s;
+}
+
+.select-btn:hover {
+  background: var(--teal-dark);
+}
+
+.select-btn:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.select-btn.selected {
+  background: var(--stamp-red);
+}
+
+.select-btn.selected::before {
+  content: '✓ ';
+}
+
+/* بطاقة "قريبًا" */
+.card.soon {
+  opacity: .6;
+}
+
+.card.soon .select-btn {
+  background: var(--ink-soft);
+  cursor: not-allowed;
+}
+
+.card.soon::after {
+  content: '🔒';
+  position: absolute;
+  left: 18px;
+  top: 18px;
+}
+
+.selected-stamp {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--stamp-red);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transform: rotate(-6deg);
+  animation: stamp-in .25s ease-out;
+}
+
+@keyframes stamp-in {
+  from {
+    transform: rotate(-6deg) scale(1.6);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(-6deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* شريط الاختيار السفلي */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--ink);
+  color: #fff;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, .25);
+  transform: translateY(110%);
+  transition: transform .25s ease-out;
+  z-index: 50;
+  flex-wrap: wrap;
+}
+
+.bottom-bar.show {
+  transform: translateY(0);
+}
+
+.bottom-bar .info {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.bottom-bar .info b {
+  color: var(--gold);
+}
+
+.bottom-bar .actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.bottom-bar a.confirm {
+  background: var(--gold);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 9px 16px;
+  border-radius: 8px;
+}
+
+.bottom-bar button.clear {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .4);
+  color: #fff;
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+@media (max-width:480px) {
+  .hero {
+    padding: 36px 18px 20px;
+  }
+  .bottom-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
